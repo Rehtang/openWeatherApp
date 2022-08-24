@@ -1,8 +1,8 @@
 package ru.rehtang.openWeather.feign
 
-import dto.ApiResponseDto
-import dto.Language
-import dto.MetricSystem
+import ru.rehtang.dto.ApiResponseDto
+import ru.rehtang.dto.Language
+import ru.rehtang.dto.MetricSystem
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -16,5 +16,5 @@ interface OpenWeatherFeignClient {
         @RequestParam("appid") apiKey: String?,
         @RequestParam("lang") language: Language?,
         @RequestParam("units") metricSystem: MetricSystem?
-    ): ApiResponseDto?
+    ): ApiResponseDto
 }
