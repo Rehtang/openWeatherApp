@@ -1,31 +1,47 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.10"
+    id("org.springframework.boot") version "2.6.3"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    kotlin("jvm") version "1.6.21"
+    kotlin("kapt") version "1.6.21"
+    kotlin("plugin.spring") version "1.6.21"
+    kotlin("plugin.jpa") version "1.6.21"
 }
 
 group = "ru.rehtang"
 version = "1.0-SNAPSHOT"
+java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
     mavenCentral()
 }
+extra.apply {
+    set("springCloudVersion", "2021.0.1")
+    set("openApi", "1.6.8")
+}
 
 dependencies {
-    testImplementation(kotlin("test"))
-    implementation("org.springframework.boot:spring-boot-starter-web:2.7.3")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.3")
-    implementation("org.springdoc:springdoc-openapi-ui:1.6.10")
-    compileOnly("org.projectlombok:lombok:1.18.24")
-    annotationProcessor ("org.projectlombok:lombok:1.18.24")
-    testImplementation("org.springframework.boot:spring-boot-starter-test:2.7.3")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.springdoc:springdoc-openapi-ui:${property("openApi")}")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 }
 
-tasks.test {
-    useJUnitPlatform()
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        jvmTarget = "11"
+    }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
